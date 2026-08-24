@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        // New light‑blue theme for the outer site
         brand: {
           bg: '#E3F2FD',
           surface: '#FFFFFF',
@@ -14,11 +15,12 @@ export default {
           textMuted: '#546E7A',
         },
         cream: '#F1E5C6',
+        // Keep any existing colours your other pages rely on
         lime: '#C6FF3D',
         yellow: '#FFD23F',
       },
       fontFamily: {
-        sans: ['Manrope', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['Manrope', 'Inter', ...],
       },
       borderRadius: {
         'iphone': '50px',
