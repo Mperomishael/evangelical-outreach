@@ -5,15 +5,26 @@ export default {
     extend: {
       colors: {
         brand: {
-          bg: '#0A0A0A',
-          lime: '#C6FF3D',
-          limeDark: '#AAFF00',
-          yellow: '#FFD23F',
-          yellowDark: '#FFE000',
+          bg: '#E3F2FD',
+          surface: '#FFFFFF',
+          surfaceAlt: '#F8FBFF',
+          primary: '#1E88E5',
+          primaryDark: '#0D47A1',
+          text: '#0D47A1',
+          textMuted: '#546E7A',
         },
+        cream: '#F1E5C6',
+        lime: '#C6FF3D',
+        yellow: '#FFD23F',
       },
       fontFamily: {
-        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['Manrope', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+      },
+      borderRadius: {
+        'iphone': '50px',
+      },
+      boxShadow: {
+        'iphone': '0 12px 24px rgba(0,0,0,0.3)',
       },
     },
   },
