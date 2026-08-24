@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.font-display {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0A0A0A;
+}
+
+::selection {
+  background: #C6FF3D;
+  color: #0A0A0A;
+}
+
+/* Signature card treatment: a hairline lime border that only lights up on
+   hover/focus, on a near-black panel. Used across evangelist / blog /
+   testimony / media cards so the whole site reads as one system. */
+.edge-card {
+  position: relative;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+.edge-card:hover,
+.edge-card:focus-within {
+  border-color: rgba(198, 255, 61, 0.5);
+  transform: translateY(-2px);
+}
+
+.text-gradient-lime {
+  background: linear-gradient(90deg, #C6FF3D 0%, #FFD23F 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  background: #C6FF3D;
+  color: #0A0A0A;
+}
+.btn-primary:hover {
+  background: #FFD23F;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #C6FF3D;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
