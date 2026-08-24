@@ -1,14 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Otega Outreach — Reaching Nations With The Gospel</title>
-    <meta name="description" content="Otega Outreach mobilizes evangelists, shares testimonies, and equips ministry across Nigeria and beyond." />
-    <link rel="icon" href="/favicon.svg" />
-  </head>
-  <body class="bg-black text-white">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        // Light blue theme for the outer site
+        brand: {
+          bg: '#E3F2FD',
+          surface: '#FFFFFF',
+          surfaceAlt: '#F8FBFF',
+          primary: '#1E88E5',
+          primaryDark: '#0D47A1',
+          text: '#0D47A1',
+          textMuted: '#546E7A',
+        },
+        // Keep the cream accent for iPhone interiors
+        cream: '#F1E5C6',
+        // Keep legacy colors if used elsewhere
+        lime: '#C6FF3D',
+        yellow: '#FFD23F',
+      },
+      fontFamily: {
+        sans: ['Manrope', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+      },
+      borderRadius: {
+        'iphone': '50px',
+      },
+      boxShadow: {
+        'iphone': '0 12px 24px rgba(0,0,0,0.3)',
+      },
+    },
+  },
+  plugins: [],
+};
