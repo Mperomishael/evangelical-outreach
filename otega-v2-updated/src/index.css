@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-milk text-brand-ink antialiased;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-blue text-white font-semibold hover:bg-brand-blueDark transition-colors shadow-soft;
+  }
+
+  .btn-outline {
+    @apply border border-brand-border text-brand-ink hover:border-brand-blue hover:text-brand-blue transition-colors bg-white;
+  }
+
+  .edge-card {
+    @apply bg-white border border-brand-border shadow-card;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-brand-milk;
+  }
+
+  .font-display {
+    font-family: 'Outfit', 'Manrope', system-ui, sans-serif;
+  }
+
+  /* Form inputs on light surfaces */
+  .input-field {
+    @apply w-full bg-white border border-brand-border rounded-xl px-4 py-3 text-brand-ink placeholder:text-brand-muted outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-colors;
+  }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: currentColor;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F4EF;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1E5AA8;
+}
