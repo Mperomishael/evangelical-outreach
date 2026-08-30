@@ -2,12 +2,14 @@ import { useOutletContext, Link } from 'react-router-dom';
 import { Facebook, Instagram, Youtube, Quote, Phone, Mail } from 'lucide-react';
 import type { SiteSettings } from '../lib/types';
 import { Section, Eyebrow } from '../components/ui';
+import Seo from '../components/Seo';
 
 // The dedicated Founder page — content (photo, bio, vision, mission, quote,
 // socials) is fully editable from Admin → Settings → Founder, so the org
 // can update it without a redeploy.
 export default function FounderPage() {
-  const { settings } = useOutletContext<{ settings: SiteSettings }>();
+  const _ctx = useOutletContext<{ settings: SiteSettings } | null>();
+  const settings = _ctx?.settings ?? ({} as SiteSettings);
 
   const socials = [
     { url: settings.founder_facebook_url, Icon: Facebook, label: 'Facebook' },
@@ -17,6 +19,7 @@ export default function FounderPage() {
 
   return (
     <>
+      <Seo settings={settings} title="Founder" description={`Meet ${settings.founder_name || settings.org_name} — ${settings.founder_title || "Founder"}. ${settings.founder_quote || settings.tagline || ""}`.trim()} />
       {/* HERO */}
       <section className="relative">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-14 sm:pt-20 pb-16 grid md:grid-cols-12 gap-10 items-center">
