@@ -2,18 +2,33 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { SiteSettings } from '../lib/types';
 
-/** Canonical production domain */
 const SITE_URL = 'https://www.otegaoutreach.org';
 
+/** Remove any HTML/script tags that might leak into titles or meta */
+function cleanText(value: unknown, fallback = ''): string {
+  if (value == null) return fallback;
+  const s = String(value)
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return s || fallback;
+}
+
 function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
-  if (!content) return;
-  let el = document.querySelector(`meta[\( {attr}=" \){key}"]`) as HTMLMetaElement | null;
+  const safe = cleanText(content);
+  if (!safe) return;
+  let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
   if (!el) {
     el = document.createElement('meta');
     el.setAttribute(attr, key);
     document.head.appendChild(el);
   }
-  el.setAttribute('content', content);
+  el.setAttribute('content', safe);
 }
 
 function upsertLink(rel: string, href: string) {
@@ -46,7 +61,6 @@ export interface SeoProps {
   settings?: SiteSettings;
 }
 
-/** Per-page SEO: title, description, Open Graph, Twitter, canonical, JSON-LD. */
 export default function Seo({
   title,
   description,
@@ -58,19 +72,25 @@ export default function Seo({
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const org = settings?.org_name || 'Otega Outreach';
-    const tagline =
-      settings?.tagline ||
-      'Reaching Nations With The Gospel - mobilizing evangelists across Nigeria and beyond.';
-    const shortTag = tagline.split(/[-—]/)[0]?.trim() || org;
-    const pageTitle = title ? `${title} | \( {org}` : ` \){org} - ${shortTag}`;
-    const desc = description || settings?.hero_subtext || tagline;
+    const org = cleanText(settings?.org_name, 'Otega Outreach');
+    const tagline = cleanText(
+      settings?.tagline,
+      'Reaching Nations With The Gospel - mobilizing evangelists across Nigeria and beyond.'
+    );
+    const shortTag = cleanText(tagline.split(/[-—|]/)[0], org);
+    const pageTitle = title
+      ? `${cleanText(title)} | ${org}`
+      : `${org} - ${shortTag}`;
+    const desc = cleanText(
+      description || settings?.hero_subtext || tagline,
+      tagline
+    );
     const img =
-      image ||
+      (typeof image === 'string' && image) ||
       settings?.hero_image_url ||
       settings?.logo_url ||
       `${SITE_URL}/favicon.svg`;
-    const url = `\( {SITE_URL} \){pathname === '/' ? '' : pathname}`;
+    const url = `${SITE_URL}${pathname === '/' ? '' : pathname}`;
 
     document.title = pageTitle;
     upsertMeta('name', 'description', desc);
@@ -82,20 +102,18 @@ export default function Seo({
     upsertMeta('name', 'author', org);
     upsertMeta('name', 'theme-color', '#1E5AA8');
 
-    // Open Graph
     upsertMeta('property', 'og:type', type);
     upsertMeta('property', 'og:site_name', org);
     upsertMeta('property', 'og:title', pageTitle);
     upsertMeta('property', 'og:description', desc);
     upsertMeta('property', 'og:url', url);
-    upsertMeta('property', 'og:image', img);
+    upsertMeta('property', 'og:image', String(img));
     upsertMeta('property', 'og:locale', 'en_NG');
 
-    // Twitter
     upsertMeta('name', 'twitter:card', 'summary_large_image');
     upsertMeta('name', 'twitter:title', pageTitle);
     upsertMeta('name', 'twitter:description', desc);
-    upsertMeta('name', 'twitter:image', img);
+    upsertMeta('name', 'twitter:image', String(img));
 
     upsertLink('canonical', url);
 
@@ -126,18 +144,12 @@ export default function Seo({
     if (sameAs.length) orgLd.sameAs = sameAs;
 
     upsertJsonLd('ld-org', orgLd);
-
     upsertJsonLd('ld-website', {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: org,
       url: SITE_URL,
       description: desc,
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: `${SITE_URL}/blog?q={search_term_string}`,
-        'query-input': 'required name=search_term_string',
-      },
     });
   }, [title, description, image, type, noIndex, settings, pathname]);
 
