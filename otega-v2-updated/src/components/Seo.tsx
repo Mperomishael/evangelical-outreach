@@ -4,11 +4,11 @@ import type { SiteSettings } from '../lib/types';
 
 const SITE_URL =
   (typeof window !== 'undefined' && window.location.origin) ||
-  'https://otegaoutreach.org';
+  'https://evangelical-outreach.vercel.app';
 
 function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
   if (!content) return;
-  let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+  let el = document.querySelector(`meta[\( {attr}=" \){key}"]`) as HTMLMetaElement | null;
   if (!el) {
     el = document.createElement('meta');
     el.setAttribute(attr, key);
@@ -27,7 +27,7 @@ function upsertLink(rel: string, href: string) {
   el.setAttribute('href', href);
 }
 
-function upsertJsonLd(id: string, data: object) {
+function upsertJsonLd(id: string, data: Record<string, unknown>) {
   let el = document.getElementById(id) as HTMLScriptElement | null;
   if (!el) {
     el = document.createElement('script');
@@ -62,19 +62,24 @@ export default function Seo({
     const org = settings?.org_name || 'Otega Outreach';
     const tagline =
       settings?.tagline ||
-      'Reaching Nations With The Gospel — mobilizing evangelists across Nigeria and beyond.';
-    const pageTitle = title ? `${title} | ${org}` : `${org} — ${tagline.split('—')[0].trim()}`;
+      'Reaching Nations With The Gospel - mobilizing evangelists across Nigeria and beyond.';
+    const shortTag = tagline.split(/[-—]/)[0]?.trim() || org;
+    const pageTitle = title ? `${title} | \( {org}` : ` \){org} - ${shortTag}`;
     const desc = description || settings?.hero_subtext || tagline;
     const img =
       image ||
       settings?.hero_image_url ||
       settings?.logo_url ||
       `${SITE_URL}/favicon.svg`;
-    const url = `${SITE_URL}${pathname === '/' ? '' : pathname}`;
+    const url = `\( {SITE_URL} \){pathname === '/' ? '' : pathname}`;
 
     document.title = pageTitle;
     upsertMeta('name', 'description', desc);
-    upsertMeta('name', 'robots', noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
+    upsertMeta(
+      'name',
+      'robots',
+      noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'
+    );
     upsertMeta('name', 'author', org);
     upsertMeta('name', 'theme-color', '#1E5AA8');
 
@@ -95,26 +100,33 @@ export default function Seo({
 
     upsertLink('canonical', url);
 
-    // Organization + WebSite structured data (homepage-level)
-    upsertJsonLd('ld-org', {
+    const sameAs = [
+      settings?.facebook_url,
+      settings?.instagram_url,
+      settings?.youtube_url,
+      settings?.twitter_url,
+    ].filter((u): u is string => Boolean(u));
+
+    const orgLd: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: org,
       url: SITE_URL,
-      logo: settings?.logo_url || undefined,
       description: desc,
-      email: settings?.contact_email || undefined,
-      telephone: settings?.contact_phone || undefined,
-      address: settings?.address
-        ? { '@type': 'PostalAddress', streetAddress: settings.address, addressCountry: 'NG' }
-        : undefined,
-      sameAs: [
-        settings?.facebook_url,
-        settings?.instagram_url,
-        settings?.youtube_url,
-        settings?.twitter_url,
-      ].filter(Boolean),
-    });
+    };
+    if (settings?.logo_url) orgLd.logo = settings.logo_url;
+    if (settings?.contact_email) orgLd.email = settings.contact_email;
+    if (settings?.contact_phone) orgLd.telephone = settings.contact_phone;
+    if (settings?.address) {
+      orgLd.address = {
+        '@type': 'PostalAddress',
+        streetAddress: settings.address,
+        addressCountry: 'NG',
+      };
+    }
+    if (sameAs.length) orgLd.sameAs = sameAs;
+
+    upsertJsonLd('ld-org', orgLd);
 
     upsertJsonLd('ld-website', {
       '@context': 'https://schema.org',
@@ -131,3 +143,4 @@ export default function Seo({
   }, [title, description, image, type, noIndex, settings, pathname]);
 
   return null;
+}
