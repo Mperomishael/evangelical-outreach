@@ -2,12 +2,16 @@ import { useOutletContext } from 'react-router-dom';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import type { SiteSettings } from '../lib/types';
 import { Section, Eyebrow } from '../components/ui';
+import Seo from '../components/Seo';
 import ContactForm from '../components/ContactForm';
 
 export default function ContactPage() {
-  const { settings } = useOutletContext<{ settings: SiteSettings }>();
+  const _ctx = useOutletContext<{ settings: SiteSettings } | null>();
+  const settings = _ctx?.settings ?? ({} as SiteSettings);
   return (
-    <Section>
+    <>
+      <Seo settings={settings} title="Contact" description={`Contact ${settings.org_name}. We would love to hear from you.`} />
+      <Section>
       <Eyebrow>Reach Out</Eyebrow>
       <h1 className="font-display text-4xl sm:text-5xl text-brand-ink font-bold mb-10">Get In Touch</h1>
       <div className="grid lg:grid-cols-2 gap-12">
@@ -34,5 +38,6 @@ export default function ContactPage() {
         </div>
       </div>
     </Section>
+    </>
   );
 }
