@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-/** Fires once when element enters the viewport (for scroll-reveal animations). */
+/** Fires when element enters viewport; also forces visible after timeout so UI never stays blank. */
 export function useInView<T extends HTMLElement = HTMLDivElement>(options?: {
   rootMargin?: string;
   threshold?: number;
@@ -14,6 +14,14 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(options?: {
     const el = ref.current;
     if (!el) return;
 
+    // Safety: never leave content invisible
+    const fallback = window.setTimeout(() => setInView(true), 1200);
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return () => clearTimeout(fallback);
+    }
+
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -24,13 +32,16 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(options?: {
         }
       },
       {
-        rootMargin: options?.rootMargin ?? '0px 0px -8% 0px',
-        threshold: options?.threshold ?? 0.12,
+        rootMargin: options?.rootMargin ?? '0px 0px -5% 0px',
+        threshold: options?.threshold ?? 0.05,
       }
     );
 
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => {
+      clearTimeout(fallback);
+      obs.disconnect();
+    };
   }, [once, options?.rootMargin, options?.threshold]);
 
   return { ref, inView };
