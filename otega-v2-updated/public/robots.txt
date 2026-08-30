@@ -1,8 +1,7 @@
 User-agent: *
 Allow: /
 
-# Admin is private
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://evangelical-outreach.vercel.app/sitemap.xml
+Sitemap: https://www.otegaoutreach.org/sitemap.xml
