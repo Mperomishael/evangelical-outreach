@@ -197,3 +197,16 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #1E5AA8;
 }
+
+
+/* Absolute fallback: if JS IO fails, show content after 1.5s */
+@keyframes revealForce {
+  to { opacity: 1; transform: none; }
+}
+.reveal-up,
+.reveal-fade,
+.reveal-left,
+.reveal-right,
+.reveal-scale {
+  animation: revealForce 0.01s linear 1.5s forwards;
+}
