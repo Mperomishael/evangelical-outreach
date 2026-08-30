@@ -3,18 +3,10 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppFloat from './WhatsAppFloat';
 import { useSettings } from '../hooks/useSettings';
-import { Loader } from './ui';
 
 export default function Layout() {
-  const { settings, loading } = useSettings();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-brand-milk flex items-center justify-center">
-        <Loader label="Loading…" />
-      </div>
-    );
-  }
+  // useSettings starts with FALLBACK — render shell immediately (no white flash)
+  const { settings } = useSettings();
 
   return (
     <div className="min-h-screen bg-brand-milk flex flex-col">
