@@ -5,7 +5,6 @@ import WhatsAppFloat from './WhatsAppFloat';
 import { useSettings } from '../hooks/useSettings';
 
 export default function Layout() {
-  // useSettings starts with FALLBACK — render shell immediately (no white flash)
   const { settings } = useSettings();
 
   return (
@@ -15,9 +14,9 @@ export default function Layout() {
         <Outlet context={{ settings }} />
       </main>
       <Footer settings={settings} />
-      {settings.whatsapp_number && (
+      {settings?.whatsapp_number ? (
         <WhatsAppFloat number={settings.whatsapp_number} />
-      )}
+      ) : null}
     </div>
   );
 }
