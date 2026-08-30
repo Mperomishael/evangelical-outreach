@@ -9,15 +9,14 @@
     <meta name="theme-color" content="#1E5AA8" />
     <meta name="author" content="Otega Outreach" />
     <meta name="geo.region" content="NG" />
-    <link rel="canonical" href="https://otegaoutreach.org/" />
-  
+    <link rel="canonical" href="https://www.otegaoutreach.org/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Otega Outreach" />
     <meta property="og:title" content="Otega Outreach — Reaching Nations With The Gospel" />
     <meta property="og:description" content="Mobilizing evangelists, sharing testimonies, and equipping ministry across Nigeria and beyond." />
-    <meta property="og:url" content="https://otegaoutreach.org//" />
+    <meta property="og:url" content="https://www.otegaoutreach.org/" />
     <meta property="og:locale" content="en_NG" />
 
     <!-- Twitter -->
@@ -30,9 +29,62 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Prevent white flash before CSS/JS hydrate -->
+    <style>
+      html, body, #root {
+        margin: 0;
+        min-height: 100vh;
+        background-color: #FFFEF9;
+        color: #0F172A;
+      }
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #FFFEF9;
+        transition: opacity 0.35s ease, visibility 0.35s ease;
+      }
+      #boot-splash.is-done {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #boot-splash .spin {
+        width: 28px;
+        height: 28px;
+        border: 2.5px solid #E8F1FB;
+        border-top-color: #1E5AA8;
+        border-radius: 50%;
+        animation: boot-spin 0.7s linear infinite;
+      }
+      @keyframes boot-spin { to { transform: rotate(360deg); } }
+    </style>
   </head>
   <body>
+    <div id="boot-splash" aria-hidden="true"><div class="spin"></div></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Hide splash once React has mounted
+      window.addEventListener('DOMContentLoaded', function () {
+        var hide = function () {
+          var el = document.getElementById('boot-splash');
+          if (el) el.classList.add('is-done');
+        };
+        // Give React a moment; also hide on first paint of #root children
+        setTimeout(hide, 400);
+        var root = document.getElementById('root');
+        if (root && window.MutationObserver) {
+          var obs = new MutationObserver(function () {
+            if (root.childNodes.length) { hide(); obs.disconnect(); }
+          });
+          obs.observe(root, { childList: true });
+        }
+      });
+    </script>
   </body>
 </html>
