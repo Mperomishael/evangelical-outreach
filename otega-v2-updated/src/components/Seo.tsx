@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { SiteSettings } from '../lib/types';
 
-const SITE_URL =
-  (typeof window !== 'undefined' && window.location.origin) ||
-  'https://evangelical-outreach.vercel.app';
+/** Canonical production domain */
+const SITE_URL = 'https://www.otegaoutreach.org';
 
 function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
   if (!content) return;
