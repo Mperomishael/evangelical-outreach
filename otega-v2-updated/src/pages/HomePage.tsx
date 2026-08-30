@@ -11,7 +11,8 @@ import Reveal from '../components/Reveal';
 import Seo from '../components/Seo';
 
 export default function HomePage() {
-  const { settings } = useOutletContext<{ settings: SiteSettings }>();
+  const ctx = useOutletContext<{ settings: SiteSettings } | null>();
+  const settings = ctx?.settings;
   const [evangelists, setEvangelists] = useState<Evangelist[] | null>(null);
   const [testimonies, setTestimonies] = useState<Testimony[] | null>(null);
   const [posts, setPosts] = useState<BlogPost[] | null>(null);
@@ -25,26 +26,24 @@ export default function HomePage() {
   return (
     <>
       <Seo
-        settings={settings}
-        title={undefined}
+        settings={settings || undefined}
         description={
-          settings.hero_subtext ||
-          settings.tagline ||
+          settings?.hero_subtext ||
+          settings?.tagline ||
           'Otega Outreach mobilizes evangelists, shares testimonies, and equips ministry across Nigeria and beyond.'
         }
-        image={settings.hero_image_url || settings.logo_url}
+        image={settings?.hero_image_url || settings?.logo_url}
       />
 
       {/* HERO — clear image, faint blue wash only */}
       <section className="relative overflow-hidden min-h-[78vh] flex items-center">
         {/* Background image — sharp, no heavy blur */}
         <div className="absolute inset-0">
-          {settings.hero_image_url ? (
+          {settings?.hero_image_url ? (
             <img
-              src={settings.hero_image_url}
+              src={settings?.hero_image_url}
               alt=""
               className="w-full h-full object-cover"
-              fetchPriority="high"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-brand-soft via-brand-milk to-brand-cream" />
@@ -61,15 +60,15 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 py-20 sm:py-28 w-full">
           <div className="max-w-3xl">
             <div className="hero-anim-1 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-sm border border-white/60 text-brand-blue text-xs font-semibold tracking-wide uppercase shadow-soft mb-6">
-              <Sparkles size={13} /> {settings.tagline || 'Gospel Outreach'}
+              <Sparkles size={13} /> {settings?.tagline || 'Gospel Outreach'}
             </div>
 
             <h1 className="hero-anim-2 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-[4.25rem] font-bold text-brand-ink leading-[1.08] tracking-tight drop-shadow-sm">
-              {settings.hero_headline || 'Reaching Nations With The Gospel'}
+              {settings?.hero_headline || 'Reaching Nations With The Gospel'}
             </h1>
 
             <p className="hero-anim-3 mt-6 text-lg sm:text-xl text-brand-ink/80 leading-relaxed max-w-2xl">
-              {settings.hero_subtext ||
+              {settings?.hero_subtext ||
                 'Mobilizing evangelists, sharing testimonies, and equipping ministry across Nigeria and beyond.'}
             </p>
 
