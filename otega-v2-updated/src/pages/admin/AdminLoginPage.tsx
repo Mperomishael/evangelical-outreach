@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Flame, Loader2 } from 'lucide-react';
 import { login, isLoggedIn } from '../../lib/adminApi';
+import Seo from '../../components/Seo';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -10,7 +11,9 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  if (isLoggedIn()) { navigate('/admin', { replace: true }); }
+  useEffect(() => {
+    if (isLoggedIn()) navigate('/admin', { replace: true });
+  }, [navigate]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,6 +30,8 @@ export default function AdminLoginPage() {
   }
 
   return (
+    <>
+    <Seo title="Admin Login" description="Admin area" noIndex />
     <div className="min-h-screen bg-brand-milk flex items-center justify-center px-5">
       <form onSubmit={onSubmit} className="w-full max-w-sm edge-card rounded-2xl p-8">
         <div className="flex items-center gap-2 text-brand-ink font-display font-semibold text-lg mb-8">
@@ -47,5 +52,6 @@ export default function AdminLoginPage() {
         </p>
       </form>
     </div>
+    </>
   );
 }
