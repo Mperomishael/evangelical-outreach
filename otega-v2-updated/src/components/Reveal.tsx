@@ -1,4 +1,4 @@
-import type { ReactNode, CSSProperties, ElementType } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 import { useInView } from '../hooks/useInView';
 
 type Variant = 'up' | 'fade' | 'left' | 'right' | 'scale';
@@ -8,7 +8,6 @@ interface Props {
   className?: string;
   variant?: Variant;
   delay?: number;
-  as?: ElementType;
 }
 
 const variants: Record<Variant, string> = {
@@ -24,18 +23,17 @@ export default function Reveal({
   className = '',
   variant = 'up',
   delay = 0,
-  as: Tag = 'div',
 }: Props) {
   const { ref, inView } = useInView<HTMLDivElement>();
   const style = { '--reveal-delay': `${delay}ms` } as CSSProperties;
 
   return (
-    <Tag
+    <div
       ref={ref}
       style={style}
       className={`${variants[variant]} ${inView ? 'is-visible' : ''} ${className}`}
     >
       {children}
-    </Tag>
+    </div>
   );
 }
