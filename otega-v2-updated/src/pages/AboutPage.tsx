@@ -1,10 +1,14 @@
 import { useOutletContext, Link } from 'react-router-dom';
 import type { SiteSettings } from '../lib/types';
 import { Section, Eyebrow } from '../components/ui';
+import Seo from '../components/Seo';
 
 export default function AboutPage() {
-  const { settings } = useOutletContext<{ settings: SiteSettings }>();
+  const _ctx = useOutletContext<{ settings: SiteSettings } | null>();
+  const settings = _ctx?.settings ?? ({} as SiteSettings);
   return (
+    <>
+      <Seo settings={settings} title="About" description={`About ${settings.org_name}. ${settings.tagline || ''}`.trim()} />
     <Section className="max-w-3xl">
       <Eyebrow>Who We Are</Eyebrow>
       <h1 className="font-display text-4xl sm:text-5xl text-brand-ink font-bold mb-6">{settings.org_name}</h1>
@@ -15,5 +19,7 @@ export default function AboutPage() {
       </p>
       <Link to="/founder" className="btn-primary inline-flex px-6 py-3 rounded-full font-semibold mt-8">Meet Our Founder</Link>
     </Section>
+    </>
+
   );
 }
